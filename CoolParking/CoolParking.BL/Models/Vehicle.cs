@@ -8,6 +8,8 @@
 
 using System;
 
+// TODO: PREVENT CREATION OF A COPY
+
 class Vehicle : IObserver<TransactionInfo>
 {
     public static string GenerateRandomRegistrationPlateNumber()
@@ -35,12 +37,15 @@ class Vehicle : IObserver<TransactionInfo>
 
     public void OnError(Exception error)
     {
-        OnCompleted();
+        throw new NotImplementedException();
     }
 
     public void OnNext(TransactionInfo value)
     {
-        throw new NotImplementedException();
+        if(value.VehicleId == Identifier)
+        {
+            Balance -= value.Sum;
+        }
     }
 
     public Vehicle(string identifier, VehicleType vehicleType, decimal balance)
