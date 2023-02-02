@@ -8,7 +8,7 @@
 
 using System;
 
-class Vehicle
+class Vehicle : IObserver<TransactionInfo>
 {
     public static string GenerateRandomRegistrationPlateNumber()
     {
@@ -26,6 +26,21 @@ class Vehicle
         }
 
         return letters[0] + letters[1] + "-" + nums.ToString() + "-" + letters[1] + letters[1];
+    }
+
+    public void OnCompleted()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnError(Exception error)
+    {
+        OnCompleted();
+    }
+
+    public void OnNext(TransactionInfo value)
+    {
+        throw new NotImplementedException();
     }
 
     public Vehicle(string identifier, VehicleType vehicleType, decimal balance)
@@ -48,7 +63,6 @@ class Vehicle
             _balance = value;
         }
     }
-
 
     private decimal _balance;
 }
