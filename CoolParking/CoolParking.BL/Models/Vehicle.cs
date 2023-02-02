@@ -10,7 +10,7 @@ using System;
 
 // TODO: PREVENT CREATION OF A COPY
 
-class Vehicle : IObserver<TransactionInfo>
+class Vehicle
 {
     public static string GenerateRandomRegistrationPlateNumber()
     {
@@ -30,27 +30,14 @@ class Vehicle : IObserver<TransactionInfo>
         return letters[0] + letters[1] + "-" + nums.ToString() + "-" + letters[1] + letters[1];
     }
 
-    public void OnCompleted()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnError(Exception error)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnNext(TransactionInfo value)
-    {
-        if(value.VehicleId == Identifier)
-        {
-            Balance -= value.Sum;
-        }
-    }
-
     public Vehicle(string identifier, VehicleType vehicleType, decimal balance)
     {
 
+    }
+
+    public void ChangeBalance(decimal value)
+    {
+        Balance += value;
     }
 
     readonly public string Identifier;

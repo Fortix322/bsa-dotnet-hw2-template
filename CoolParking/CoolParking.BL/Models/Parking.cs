@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-class Parking
+class Parking : IObservable<TransactionInfo>
 {
 
     public static Parking GetInstance()
@@ -20,6 +20,12 @@ class Parking
 
         return _instance;
     }
+
+    public IDisposable Subscribe(IObserver<TransactionInfo> observer)
+    {
+        
+    }
+
     private Parking() { }
 
     public decimal Balance

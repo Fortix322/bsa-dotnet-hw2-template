@@ -4,3 +4,24 @@
 //       Other validation rules and constructor format went from tests.
 //       Other implementation details are up to you, they just have to match the interface requirements
 //       and tests, for example, in ParkingServiceTests you can find the necessary constructor format and validation rules.
+
+
+using System;
+
+//public void OnCompleted()
+//{
+//    throw new NotImplementedException();
+//}
+
+//public void OnError(Exception error)
+//{
+//    throw new NotImplementedException();
+//}
+
+//public void OnNext(TransactionInfo value)
+//{
+//    if (value.VehicleId == Identifier)
+//    {
+//        Balance -= value.Sum;
+//    }
+//}
