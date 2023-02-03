@@ -19,7 +19,11 @@ class TimerService : ITimerService
         {
             return _timer.Interval;
         }
-        set => _timer.Interval = value;
+        set
+        {
+            if (value <= 0) throw new ArgumentException();
+            _timer.Interval = value;
+        }
     }
 
     public event ElapsedEventHandler Elapsed;
