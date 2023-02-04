@@ -1,7 +1,7 @@
 ﻿// TODO: implement enum VehicleType.
 //       Items: PassengerCar, Truck, Bus, Motorcycle.
 
-enum VehicleType
+public enum VehicleType
 {
     PassengerCar,
     Truck,

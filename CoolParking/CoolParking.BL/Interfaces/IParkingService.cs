@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using CoolParking.BL.Models;
 
 namespace CoolParking.BL.Interfaces
 {

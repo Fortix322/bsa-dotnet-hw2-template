@@ -4,7 +4,7 @@
 
 using System;
 
-class TransactionInfo
+public class TransactionInfo
 {
     public TransactionInfo(string vehicleId, decimal sum)
     {

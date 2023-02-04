@@ -5,7 +5,7 @@ using CoolParking.BL.Interfaces;
 using System;
 using System.Timers;
 
-class TimerService : ITimerService
+public class TimerService : ITimerService
 {
     public TimerService(double interval)
     {

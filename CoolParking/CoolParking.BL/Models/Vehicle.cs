@@ -10,7 +10,7 @@ using System;
 
 // TODO: PREVENT CREATION OF A COPY
 
-class Vehicle
+public class Vehicle
 {
     public static string GenerateRandomRegistrationPlateNumber()
     {
@@ -35,7 +35,7 @@ class Vehicle
 
     }
 
-    public void ChangeBalance(decimal value)
+    internal void ChangeBalance(decimal value)
     {
         Balance += value;
     }

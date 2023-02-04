@@ -6,9 +6,10 @@ using CoolParking.BL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Timers;
 
-class Parking
+internal class Parking
 {
     public static Parking GetInstance()
     {
@@ -25,7 +26,11 @@ class Parking
 
     private Parking() 
     {
-        _maxCapacity = Settings.MaxParkingCapacity;
+        if(Settings.ParkingCapacity < 0)
+        {
+            throw new ArgumentException();
+        }
+        Capacity = Settings.ParkingCapacity;
     }
 
     public void SetTimer(ITimerService timer)
@@ -39,38 +44,30 @@ class Parking
         }
     }
 
-    public ReadOnlyCollection<Vehicle> GetVehicles()
+    public ReadOnlyDictionary<string, Vehicle> GetVehicles()
     {
-        return _vehiclesOnBalance.AsReadOnly();
+        return new ReadOnlyDictionary<string, Vehicle>(_vehiclesOnBalance);
     }
 
     public bool AddVehicle(Vehicle vehicle)
     {
-        if(_vehiclesOnBalance.Count + 1 < _maxCapacity)
+        if(_vehiclesOnBalance.Count + 1 < Capacity)
         {
-            _vehiclesOnBalance.Add(vehicle);
+            _vehiclesOnBalance.Add(vehicle.Identifier, vehicle);
             return true;
         }
-
         return false;
     }
 
     public void RemoveVehicle(string id)
     {
-        foreach(Vehicle v in _vehiclesOnBalance)
-        {
-            if (v.Identifier == id) _vehiclesOnBalance.Remove(v);
-        }
-    }
-
-    public void RemoveVehicle(Vehicle vehicle)
-    {
-        _vehiclesOnBalance.Remove(vehicle);
+        _vehiclesOnBalance.Remove(id);
     }
 
     public event Withdraw OnWithdraw;
     public delegate void Withdraw(ReadOnlyCollection<Vehicle> vehiclesList);
 
+    public readonly int Capacity;
     public decimal Balance
     {
         get
@@ -89,13 +86,12 @@ class Parking
 
     private void FireWithdraw(object sender, ElapsedEventArgs e)
     {
-        OnWithdraw.Invoke(_vehiclesOnBalance.AsReadOnly());
+        OnWithdraw.Invoke(_vehiclesOnBalance.Values.ToList().AsReadOnly());
     }
 
-    private List<Vehicle> _vehiclesOnBalance;
     private ITimerService _timer;
 
-    private readonly uint _maxCapacity;
+    private Dictionary<string, Vehicle> _vehiclesOnBalance;
 
     private static object _lock = new object();
     private static Parking _instance = null;

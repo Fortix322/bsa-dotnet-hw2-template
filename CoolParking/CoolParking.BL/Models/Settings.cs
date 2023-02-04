@@ -3,6 +3,23 @@
 
 static class Settings
 {
-    public static uint MaxParkingCapacity = 50000;
+    public static int ParkingCapacity = 50000;
     public static ushort WithdrawalTimeIntervalInSeconds = 5; 
+
+    public static decimal WithdrawalValueByVehicleType(VehicleType vehicleType)
+    {
+        switch(vehicleType)
+        {
+            case VehicleType.Motorcycle:
+                return 1;
+            case VehicleType.Bus:
+                return 3.5M;
+            case VehicleType.PassengerCar:
+                return 2;
+            case VehicleType.Truck:
+                return 5;
+            default:
+                return 0;
+        }
+    }
 }
