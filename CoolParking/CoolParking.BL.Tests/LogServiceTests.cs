@@ -3,7 +3,6 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using CoolParking.BL.Interfaces;
-using CoolParking.BL.Services;
 using Xunit;
 
 namespace CoolParking.BL.Tests

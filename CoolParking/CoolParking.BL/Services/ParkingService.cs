@@ -7,18 +7,24 @@
 
 using CoolParking.BL.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Timers;
 
 public class ParkingService : IParkingService
 {
-
-    public ParkingService(ITimerService withdrawalTimer, ITimerService logTimer)
+    public ParkingService(ITimerService withdrawalTimer, ITimerService logTimer, ILogService logService)
     {
         _parking = Parking.GetInstance();
-        _parking.OnWithdraw += MakeWithdraw;
-        _parking.SetTimer(withdrawalTimer);
+
+        _transactionsLog = logService;
+
+        _withdrawalTimer = withdrawalTimer;
+        _transactionLoggingTimer = logTimer;
+
+        _transactionLoggingTimer.Elapsed += OnTimerElapsed;
+        _transactionLoggingTimer.Start();
     }
 
     public void AddVehicle(Vehicle vehicle)
@@ -27,10 +33,7 @@ public class ParkingService : IParkingService
             throw new InvalidOperationException();
     }
 
-    public void Dispose()
-    {
-        _parking.OnWithdraw -= MakeWithdraw;
-    }
+    public void Dispose() {}
 
     public decimal GetBalance()
     {
@@ -54,7 +57,7 @@ public class ParkingService : IParkingService
 
     public ReadOnlyCollection<Vehicle> GetVehicles()
     {
-       return new ReadOnlyCollection<Vehicle>(_parking.GetVehicles().Values.ToImmutableList()); // ???
+        return _parking.GetVehicles();
     }
 
     public string ReadFromLog()
@@ -64,8 +67,9 @@ public class ParkingService : IParkingService
 
     public void RemoveVehicle(string vehicleId)
     {
-        Vehicle vehicle = _parking.GetVehicles()[vehicleId];
-        if(vehicle != null)
+        Vehicle vehicle;
+
+        if(_parking.ContainsVehicle(vehicleId, out vehicle);)
         {
             if (vehicle.Balance < 0) throw new InvalidOperationException();
             _parking.RemoveVehicle(vehicleId);
@@ -74,7 +78,10 @@ public class ParkingService : IParkingService
 
     public void TopUpVehicle(string vehicleId, decimal sum)
     {
-        _parking.GetVehicles()[vehicleId].ChangeBalance(sum);
+        Vehicle vehicle;
+
+        if(_parking.ContainsVehicle(vehicleId, out vehicle))
+            vehicle.ChangeBalance(sum);
     }
 
     private void MakeWithdraw(ReadOnlyCollection<Vehicle> vehicles)
@@ -85,5 +92,30 @@ public class ParkingService : IParkingService
         }
     }
 
+    private void WriteTransactionsToLog()
+    { 
+        foreach(TransactionInfo transaction in _transactions)
+        {
+            string logInfo  = "[" + transaction.TransactionTime + "] " + transaction.VehicleId + " " + transaction.Sum + '\n';
+            _transactionsLog.Write(logInfo);
+        }
+        _transactions.Clear();
+    }
+
+    void OnTimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        if(sender == _transactionLoggingTimer)
+        {
+            WriteTransactionsToLog();
+        }
+    }
+
     private Parking _parking;
+
+    private List<TransactionInfo> _transactions;
+
+    private ILogService _transactionsLog;
+
+    private ITimerService _transactionLoggingTimer;
+    private ITimerService _withdrawalTimer;
 }

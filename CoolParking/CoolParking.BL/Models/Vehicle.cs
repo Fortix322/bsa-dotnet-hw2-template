@@ -7,8 +7,8 @@
 //       Static method GenerateRandomRegistrationPlateNumber should return a randomly generated unique identifier.
 
 using System;
-
-// TODO: PREVENT CREATION OF A COPY
+using System.Text;
+using System.Text.RegularExpressions;
 
 public class Vehicle
 {
@@ -17,7 +17,6 @@ public class Vehicle
         // TODO: proper registration plate generator
 
         char[] letters = new char[4];
-
         int[] nums = new int[4];
 
         var rand = new Random();
@@ -32,7 +31,13 @@ public class Vehicle
 
     public Vehicle(string identifier, VehicleType vehicleType, decimal balance)
     {
+        Regex vehicleNumberPattern = new Regex(Settings.VehicleIDTemplate);
 
+        if (balance < 0 || vehicleNumberPattern.Matches(identifier).Count != 1) throw new ArgumentException();
+
+        Id = identifier;
+        VehicleType = vehicleType;
+        Balance = balance;
     }
 
     internal void ChangeBalance(decimal value)
@@ -40,7 +45,7 @@ public class Vehicle
         Balance += value;
     }
 
-    readonly public string Identifier;
+    readonly public string Id;
     readonly public VehicleType VehicleType;
 
     public decimal Balance

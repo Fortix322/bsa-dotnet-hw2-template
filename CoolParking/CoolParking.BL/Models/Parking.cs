@@ -2,12 +2,10 @@
 //       Implementation details are up to you, they just have to meet the requirements 
 //       of the home task and be consistent with other classes and tests.
 
-using CoolParking.BL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Timers;
 
 internal class Parking
 {
@@ -31,31 +29,35 @@ internal class Parking
             throw new ArgumentException();
         }
         Capacity = Settings.ParkingCapacity;
+        _vehiclesOnBalance = new Dictionary<string, Vehicle>();
     }
 
-    public void SetTimer(ITimerService timer)
+    public ReadOnlyCollection<Vehicle> GetVehicles()  
     {
-        if(_timer != null)
-        {
-            _timer = timer;
-            _timer.Elapsed += FireWithdraw;
-            _timer.Start();
-
-        }
+        return _vehiclesOnBalance.Values.ToList().AsReadOnly();
     }
 
-    public ReadOnlyDictionary<string, Vehicle> GetVehicles()
+    public bool ContainsVehicle(string id, out Vehicle vehicle)
     {
-        return new ReadOnlyDictionary<string, Vehicle>(_vehiclesOnBalance);
+        return _vehiclesOnBalance.TryGetValue(id, out vehicle);
     }
 
     public bool AddVehicle(Vehicle vehicle)
     {
         if(_vehiclesOnBalance.Count + 1 < Capacity)
         {
-            _vehiclesOnBalance.Add(vehicle.Identifier, vehicle);
+            try
+            {
+                _vehiclesOnBalance.Add(vehicle.Id, vehicle);
+            }
+            catch(Exception)
+            {
+                throw new ArgumentException();
+            }
+
             return true;
         }
+
         return false;
     }
 
@@ -63,9 +65,6 @@ internal class Parking
     {
         _vehiclesOnBalance.Remove(id);
     }
-
-    public event Withdraw OnWithdraw;
-    public delegate void Withdraw(ReadOnlyCollection<Vehicle> vehiclesList);
 
     public readonly int Capacity;
     public decimal Balance
@@ -83,13 +82,6 @@ internal class Parking
     }
 
     private decimal _balance;
-
-    private void FireWithdraw(object sender, ElapsedEventArgs e)
-    {
-        OnWithdraw.Invoke(_vehiclesOnBalance.Values.ToList().AsReadOnly());
-    }
-
-    private ITimerService _timer;
 
     private Dictionary<string, Vehicle> _vehiclesOnBalance;
 
