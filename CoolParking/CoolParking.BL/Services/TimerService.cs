@@ -10,6 +10,7 @@ public class TimerService : ITimerService
     public TimerService(double interval)
     {
         _timer = new Timer(interval);
+        _timer.AutoReset = true;
         _timer.Elapsed += FireElapsedEvent;
     }
 
@@ -32,6 +33,7 @@ public class TimerService : ITimerService
     {
         Stop();
         _timer.Elapsed -= FireElapsedEvent;
+        _timer.Dispose();
 
         Delegate[] clientList = Elapsed.GetInvocationList();
         foreach (var d in clientList)
@@ -47,6 +49,7 @@ public class TimerService : ITimerService
     {
         _timer.Stop();
     }
+
     private void FireElapsedEvent(object sender, ElapsedEventArgs e)
     {
         Elapsed.Invoke(sender, e);

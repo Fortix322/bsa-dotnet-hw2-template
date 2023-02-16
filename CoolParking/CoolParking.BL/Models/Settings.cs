@@ -7,6 +7,8 @@ using System.Reflection;
 public static class Settings
 {
     public static int ParkingCapacity = 10;
+    public static decimal ParkingStartingBalance = 0;
+
 
     public static ushort WithdrawalTimeIntervalInSeconds = 5;
     public static ushort LoggingTimeIntervalInSeconds = 60;

@@ -38,7 +38,12 @@ public class ParkingService : IParkingService
             throw new InvalidOperationException();
     }
 
-    public void Dispose() {}
+    public void Dispose() 
+    {
+        _withdrawalTimer.Dispose();
+        _transactionLoggingTimer.Dispose();
+        Parking.ResetInstance();
+    }
 
     public decimal GetBalance()
     {

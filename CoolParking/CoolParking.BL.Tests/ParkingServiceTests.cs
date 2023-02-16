@@ -121,7 +121,6 @@ namespace CoolParking.BL.Tests
         {
             var vehicle = new Vehicle("AA-0001-AA", VehicleType.Bus, 100);
             _parkingService.AddVehicle(vehicle);
-
             Assert.Throws<ArgumentException>(() => _parkingService.TopUpVehicle("AA-0002-AA", 100));
         }
 

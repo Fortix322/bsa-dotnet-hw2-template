@@ -22,6 +22,12 @@ internal class Parking
         return _instance;
     }
 
+    internal static void ResetInstance()
+    {
+        _instance._vehiclesOnBalance.Clear();
+        _instance.Balance = Settings.ParkingStartingBalance;
+    }
+
     private Parking() 
     {
         if(Settings.ParkingCapacity < 0)
@@ -29,6 +35,7 @@ internal class Parking
             throw new ArgumentException();
         }
         Capacity = Settings.ParkingCapacity;
+        Balance = Settings.ParkingStartingBalance;
         _vehiclesOnBalance = new Dictionary<string, Vehicle>();
     }
 
