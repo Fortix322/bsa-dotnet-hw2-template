@@ -74,7 +74,7 @@ internal class Parking
             return _balance;
         }
 
-        private set
+        internal set
         {
             if (value < 0) throw new ArgumentException();
             _balance = value;

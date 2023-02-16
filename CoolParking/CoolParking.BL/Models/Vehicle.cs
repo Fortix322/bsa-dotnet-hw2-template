@@ -40,11 +40,6 @@ public class Vehicle
         Balance = balance;
     }
 
-    internal void ChangeBalance(decimal value)
-    {
-        Balance += value;
-    }
-
     readonly public string Id;
     readonly public VehicleType VehicleType;
 
@@ -55,7 +50,7 @@ public class Vehicle
             return _balance;
         }
 
-        private set
+        internal set
         {
             _balance = value;
         }

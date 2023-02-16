@@ -4,7 +4,7 @@
 
 using System;
 
-public class TransactionInfo
+public struct TransactionInfo
 {
     public TransactionInfo(string vehicleId, decimal sum)
     {

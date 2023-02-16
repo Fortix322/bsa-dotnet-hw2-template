@@ -9,7 +9,6 @@ using CoolParking.BL.Interfaces;
 
 public class LogService : ILogService
 {
-
     public LogService(string logPath)
     {
         LogPath = logPath;
@@ -53,7 +52,7 @@ public class LogService : ILogService
 
     public void Write(string logInfo)
     {
-        using(StreamWriter sw = new StreamWriter(LogPath))
+        using(StreamWriter sw = new StreamWriter(LogPath, true))
         {
             sw.WriteLine(logInfo);
             sw.Close();

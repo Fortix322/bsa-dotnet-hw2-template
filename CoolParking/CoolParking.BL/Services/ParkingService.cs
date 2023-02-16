@@ -8,8 +8,8 @@
 using CoolParking.BL.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Text;
 using System.Timers;
 
 public class ParkingService : IParkingService
@@ -18,6 +18,8 @@ public class ParkingService : IParkingService
     {
         _parking = Parking.GetInstance();
 
+        _transactions = new List<TransactionInfo>();
+
         _transactionsLog = logService;
 
         _withdrawalTimer = withdrawalTimer;
@@ -25,6 +27,9 @@ public class ParkingService : IParkingService
 
         _transactionLoggingTimer.Elapsed += OnTimerElapsed;
         _transactionLoggingTimer.Start();
+
+        _withdrawalTimer.Elapsed += OnTimerElapsed;
+        _withdrawalTimer.Start();
     }
 
     public void AddVehicle(Vehicle vehicle)
@@ -52,7 +57,7 @@ public class ParkingService : IParkingService
 
     public TransactionInfo[] GetLastParkingTransactions()
     {
-        throw new NotImplementedException();
+        return _transactions.ToArray();
     }
 
     public ReadOnlyCollection<Vehicle> GetVehicles()
@@ -69,44 +74,58 @@ public class ParkingService : IParkingService
     {
         Vehicle vehicle;
 
-        if(_parking.ContainsVehicle(vehicleId, out vehicle);)
-        {
-            if (vehicle.Balance < 0) throw new InvalidOperationException();
-            _parking.RemoveVehicle(vehicleId);
-        }
+        if (!_parking.ContainsVehicle(vehicleId, out vehicle))
+            throw new ArgumentException();
+
+        if (vehicle.Balance < 0) throw new InvalidOperationException();
+        _parking.RemoveVehicle(vehicleId);
+        
     }
 
     public void TopUpVehicle(string vehicleId, decimal sum)
     {
         Vehicle vehicle;
 
-        if(_parking.ContainsVehicle(vehicleId, out vehicle))
-            vehicle.ChangeBalance(sum);
+        if (sum < 0) throw new ArgumentException();
+
+        if (!_parking.ContainsVehicle(vehicleId, out vehicle))
+            throw new ArgumentException();
+
+        vehicle.Balance += sum;
     }
 
     private void MakeWithdraw(ReadOnlyCollection<Vehicle> vehicles)
     {
         foreach(Vehicle vehicle in vehicles)
         {
-            vehicle.ChangeBalance(-Settings.WithdrawalValueByVehicleType(vehicle.VehicleType));
+            decimal sum = Settings.GetWithdrawalValueByVehicleType(vehicle.VehicleType);
+            if (sum > vehicle.Balance) sum = Math.Abs(vehicle.Balance - sum) + (sum - vehicle.Balance) * Settings.PenaltyRate;
+            vehicle.Balance -= sum;
+            _parking.Balance += sum;
+            _transactions.Add(new TransactionInfo(vehicle.Id, sum));
         }
     }
 
     private void WriteTransactionsToLog()
-    { 
+    {
+        StringBuilder stringBuilder = new StringBuilder();
         foreach(TransactionInfo transaction in _transactions)
         {
-            string logInfo  = "[" + transaction.TransactionTime + "] " + transaction.VehicleId + " " + transaction.Sum + '\n';
-            _transactionsLog.Write(logInfo);
+            stringBuilder.AppendLine($"[{transaction.TransactionTime}] {transaction.VehicleId} {transaction.Sum}");
         }
+        _transactionsLog.Write(stringBuilder.ToString());
         _transactions.Clear();
     }
 
-    void OnTimerElapsed(object? sender, ElapsedEventArgs e)
+    void OnTimerElapsed(object sender, ElapsedEventArgs e)
     {
         if(sender == _transactionLoggingTimer)
         {
             WriteTransactionsToLog();
+        }
+        else if(sender == _withdrawalTimer)
+        {
+            MakeWithdraw(GetVehicles());
         }
     }
 
