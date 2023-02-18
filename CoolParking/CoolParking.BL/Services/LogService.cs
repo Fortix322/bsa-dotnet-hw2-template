@@ -31,20 +31,10 @@ public class LogService : ILogService
     {
         string logData = default;
 
-        try
+        using(StreamReader sr = new StreamReader(_logPath))
         {
-            using(StreamReader sr = new StreamReader(_logPath))
-            {
-                logData = sr.ReadToEnd();
-                sr.Close();
-            }
-        }
-        catch(Exception exception)
-        {
-            if(exception.GetType() == typeof(FileNotFoundException))
-            {
-                throw new InvalidOperationException();
-            }
+            logData = sr.ReadToEnd();
+            sr.Close();
         }
 
         return logData;

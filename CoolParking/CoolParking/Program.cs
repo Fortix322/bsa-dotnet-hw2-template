@@ -56,9 +56,16 @@ class CoolParking
                     PrintTransactions(parkingService.GetLastParkingTransactions());
                     break;
                 case 9:
-                    string logData = parkingService.ReadFromLog();
-                    if (logData == default) Console.WriteLine("Log is empty");
-                    Console.Write(logData);
+                    try
+                    {
+                        string logData = parkingService.ReadFromLog();
+                        if (logData == default) Console.WriteLine("Log is empty");
+                        Console.Write(logData);
+                    }
+                    catch(InvalidOperationException)
+                    {
+                        Console.WriteLine("Log file doesn`t exist yet");
+                    }
                     break;
                 case 10:
                     Console.Clear();

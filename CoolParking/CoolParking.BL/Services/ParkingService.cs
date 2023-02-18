@@ -9,6 +9,7 @@ using CoolParking.BL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 using System.Timers;
 
@@ -72,7 +73,14 @@ public class ParkingService : IParkingService
 
     public string ReadFromLog()
     {
-        return _transactionsLog.Read();
+        try
+        {
+            return _transactionsLog.Read();
+        }
+        catch(FileNotFoundException)
+        {
+            throw new InvalidOperationException();
+        }
     }
 
     public void RemoveVehicle(string vehicleId)
