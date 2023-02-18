@@ -72,7 +72,7 @@ public class ParkingService : IParkingService
 
     public string ReadFromLog()
     {
-        throw new NotImplementedException();
+        return _transactionsLog.Read();
     }
 
     public void RemoveVehicle(string vehicleId)
@@ -113,7 +113,7 @@ public class ParkingService : IParkingService
 
     private void WriteTransactionsToLog()
     {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder(default(string));
         foreach(TransactionInfo transaction in _transactions)
         {
             stringBuilder.AppendLine($"[{transaction.TransactionTime}] {transaction.VehicleId} {transaction.Sum}");

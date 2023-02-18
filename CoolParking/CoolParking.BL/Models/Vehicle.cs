@@ -7,31 +7,21 @@
 //       Static method GenerateRandomRegistrationPlateNumber should return a randomly generated unique identifier.
 
 using System;
-using System.Text;
 using System.Text.RegularExpressions;
+
+using Fare;
 
 public class Vehicle
 {
     public static string GenerateRandomRegistrationPlateNumber()
     {
-        // TODO: proper registration plate generator
-
-        char[] letters = new char[4];
-        int[] nums = new int[4];
-
-        var rand = new Random();
-        for (int i = 0; i < 4; i++)
-        {
-            letters[i] = (char)rand.Next(129);
-            nums[i] = rand.Next(10);
-        }
-
-        return letters[0] + letters[1] + "-" + nums.ToString() + "-" + letters[1] + letters[1];
+        Xeger xeger = new Xeger(Settings.VehicleIdPattern);
+        return xeger.Generate();
     }
 
     public Vehicle(string identifier, VehicleType vehicleType, decimal balance)
     {
-        Regex vehicleNumberPattern = new Regex(Settings.VehicleIDTemplate);
+        Regex vehicleNumberPattern = new Regex(Settings.VehicleIdPattern);
 
         if (balance < 0 || vehicleNumberPattern.Matches(identifier).Count != 1) throw new ArgumentException();
 

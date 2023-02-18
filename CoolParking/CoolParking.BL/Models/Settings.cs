@@ -6,18 +6,17 @@ using System.Reflection;
 
 public static class Settings
 {
-    public static int ParkingCapacity = 10;
-    public static decimal ParkingStartingBalance = 0;
+    public static readonly int ParkingCapacity = 10;
+    public static readonly decimal ParkingStartingBalance = 0;
 
+    public static readonly ushort WithdrawalTimeIntervalInSeconds = 5;
+    public static readonly ushort LoggingTimeIntervalInSeconds = 60;
 
-    public static ushort WithdrawalTimeIntervalInSeconds = 5;
-    public static ushort LoggingTimeIntervalInSeconds = 60;
+    public static readonly string LogPath = $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\Transactions.log";
 
-    public static string LogPath = $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\Transactions.log";
+    public static readonly string VehicleIdPattern = @"[A-Z]{2}[-]\d{4}[-][A-Z]{2}";
 
-    public static string VehicleIDTemplate = @"[A-Z]{2}[-][\d]{4}[-][A-Z]{2}";
-
-    public static decimal PenaltyRate = 2.5M;
+    public static readonly decimal PenaltyRate = 2.5M;
 
     public static decimal GetWithdrawalValueByVehicleType(VehicleType vehicleType)
     {

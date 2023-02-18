@@ -51,7 +51,7 @@ internal class Parking
 
     public bool AddVehicle(Vehicle vehicle)
     {
-        if(_vehiclesOnBalance.Count + 1 < Capacity)
+        if(_vehiclesOnBalance.Count + 1 <= Capacity)
         {
             try
             {

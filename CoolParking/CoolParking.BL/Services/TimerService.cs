@@ -9,7 +9,7 @@ public class TimerService : ITimerService
 {
     public TimerService(double interval)
     {
-        _timer = new Timer(interval);
+        _timer = new Timer(interval * 1000);
         _timer.AutoReset = true;
         _timer.Elapsed += FireElapsedEvent;
     }
@@ -52,7 +52,7 @@ public class TimerService : ITimerService
 
     private void FireElapsedEvent(object sender, ElapsedEventArgs e)
     {
-        Elapsed.Invoke(sender, e);
+        Elapsed.Invoke(this, e);
     }
 
     private Timer _timer;

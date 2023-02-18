@@ -56,8 +56,6 @@ public class LogService : ILogService
         {
             sw.WriteLine(logInfo);
             sw.Close();
-
-            Console.WriteLine("Wrote");
         }
     }
 
