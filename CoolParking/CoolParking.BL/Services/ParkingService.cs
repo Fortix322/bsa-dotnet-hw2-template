@@ -130,7 +130,7 @@ public class ParkingService : IParkingService
         _transactions.Clear();
     }
 
-    void OnTimerElapsed(object sender, ElapsedEventArgs e)
+    private void OnTimerElapsed(object sender, ElapsedEventArgs e)
     {
         if(sender == _transactionLoggingTimer)
         {

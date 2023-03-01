@@ -7,6 +7,7 @@
 //       Static method GenerateRandomRegistrationPlateNumber should return a randomly generated unique identifier.
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 using Fare;
