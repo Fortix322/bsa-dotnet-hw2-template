@@ -73,14 +73,7 @@ public class ParkingService : IParkingService
 
     public string ReadFromLog()
     {
-        try
-        {
-            return _transactionsLog.Read();
-        }
-        catch(FileNotFoundException)
-        {
-            throw new InvalidOperationException();
-        }
+        return _transactionsLog.Read();
     }
 
     public void RemoveVehicle(string vehicleId)
@@ -112,7 +105,13 @@ public class ParkingService : IParkingService
         foreach(Vehicle vehicle in vehicles)
         {
             decimal sum = Settings.GetWithdrawalValueByVehicleType(vehicle.VehicleType);
-            if (sum > vehicle.Balance) sum = Math.Abs(vehicle.Balance - sum) + (sum - vehicle.Balance) * Settings.PenaltyRate;
+            if (vehicle.Balance - sum < 0)
+            {
+                if (vehicle.Balance < 0)
+                    sum *= Settings.PenaltyRate;
+                else
+                    sum = vehicle.Balance + (sum - vehicle.Balance) * Settings.PenaltyRate;
+            }
             vehicle.Balance -= sum;
             _parking.Balance += sum;
             _transactions.Add(new TransactionInfo(vehicle.Id, sum));

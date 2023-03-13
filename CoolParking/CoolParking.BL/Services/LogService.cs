@@ -29,9 +29,12 @@ public class LogService : ILogService
 
     public string Read()
     {
+        if (!File.Exists(LogPath))
+            throw new InvalidOperationException();
+
         string logData = default;
 
-        using(StreamReader sr = new StreamReader(_logPath))
+        using (StreamReader sr = new StreamReader(_logPath))
         {
             logData = sr.ReadToEnd();
             sr.Close();

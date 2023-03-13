@@ -20,19 +20,19 @@ public class Vehicle
         return xeger.Generate();
     }
 
-    public Vehicle(string identifier, VehicleType vehicleType, decimal balance)
+    public Vehicle(string id, VehicleType vehicleType, decimal balance)
     {
         Regex vehicleNumberPattern = new Regex(Settings.VehicleIdPattern);
 
-        if (balance < 0 || vehicleNumberPattern.Matches(identifier).Count != 1) throw new ArgumentException();
+        if (balance < 0 || vehicleNumberPattern.Matches(id).Count != 1) throw new ArgumentException();
 
-        Id = identifier;
+        Id = id;
         VehicleType = vehicleType;
         Balance = balance;
     }
 
-    readonly public string Id;
-    readonly public VehicleType VehicleType;
+    public readonly string Id;
+    public readonly VehicleType VehicleType;
 
     public decimal Balance
     {

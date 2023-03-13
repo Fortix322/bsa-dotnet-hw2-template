@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CoolParking.BL.Interfaces;
 using System.Text.Json;
+using CoolParking.WebAPI.Models;
 
 namespace CoolParking.WebAPI.Controllers
 {

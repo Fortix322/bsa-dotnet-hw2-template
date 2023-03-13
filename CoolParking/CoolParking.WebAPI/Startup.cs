@@ -20,8 +20,8 @@ namespace CoolParking.WebAPI
             services.AddSwaggerGen();
 
             services.AddSingleton<ILogService>(s => new LogService(Settings.LogPath));
-            services.AddSingleton<ILogTimerService>(s => new LogTimerService(Settings.LoggingTimeIntervalInSeconds * 1000f));
-            services.AddSingleton<IWithdrawalTimerService>(s => new WithdrawalTimerService(Settings.WithdrawalTimeIntervalInSeconds * 1000f));
+            services.AddSingleton<ILogTimerService>(s => new LogTimerService(Settings.LoggingTimeIntervalInSeconds));
+            services.AddSingleton<IWithdrawalTimerService>(s => new WithdrawalTimerService(Settings.WithdrawalTimeIntervalInSeconds));
 
             services.AddSingleton<IParkingService, ParkingService>(s => new ParkingService(
                 s.GetRequiredService<IWithdrawalTimerService>(),

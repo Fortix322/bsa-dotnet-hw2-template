@@ -44,9 +44,9 @@ internal class Parking
         return _vehiclesOnBalance.Values.ToList().AsReadOnly();
     }
 
-    public bool ContainsVehicle(string id, out Vehicle vehicle)
+    public bool ContainsVehicle(string Id, out Vehicle vehicle)
     {
-        return _vehiclesOnBalance.TryGetValue(id, out vehicle);
+        return _vehiclesOnBalance.TryGetValue(Id, out vehicle);
     }
 
     public bool AddVehicle(Vehicle vehicle)
@@ -68,9 +68,9 @@ internal class Parking
         return false;
     }
 
-    public void RemoveVehicle(string id)
+    public void RemoveVehicle(string Id)
     {
-        _vehiclesOnBalance.Remove(id);
+        _vehiclesOnBalance.Remove(Id);
     }
 
     public readonly int Capacity;
