@@ -45,6 +45,8 @@ public class LogService : ILogService
 
     public void Write(string logInfo)
     {
+        if (logInfo == default(string)) return;
+
         using(StreamWriter sw = new StreamWriter(LogPath, true))
         {
             sw.WriteLine(logInfo);

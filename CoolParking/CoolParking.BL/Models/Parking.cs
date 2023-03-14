@@ -44,9 +44,9 @@ internal class Parking
         return _vehiclesOnBalance.Values.ToList().AsReadOnly();
     }
 
-    public bool ContainsVehicle(string Id, out Vehicle vehicle)
+    public bool ContainsVehicle(string id, out Vehicle vehicle)
     {
-        return _vehiclesOnBalance.TryGetValue(Id, out vehicle);
+        return _vehiclesOnBalance.TryGetValue(id, out vehicle);
     }
 
     public bool AddVehicle(Vehicle vehicle)

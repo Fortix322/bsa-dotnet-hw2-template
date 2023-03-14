@@ -3,6 +3,7 @@
 //       Other implementation details are up to you, they just have to meet the requirements of the homework.
 
 using System;
+using System.Transactions;
 
 public struct TransactionInfo
 {
@@ -13,7 +14,21 @@ public struct TransactionInfo
         Sum = sum;
     }
 
-    public readonly decimal Sum;
-    public readonly string VehicleId;
-    public readonly DateTime TransactionTime;
+    public override string ToString()
+    {
+        return $"[{TransactionTime}] {VehicleId} {Sum}";
+    }
+
+    public decimal Sum
+    {
+        get; set;
+    }
+    public string VehicleId
+    {
+        get; set;
+    }
+    public DateTime TransactionTime
+    {
+        get; set;
+    }
 }

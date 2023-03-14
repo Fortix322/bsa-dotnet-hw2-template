@@ -71,6 +71,11 @@ public class ParkingService : IParkingService
         return _parking.GetVehicles();
     }
 
+    public bool TryGetVehicleByID(string id, out Vehicle vehicle)
+    {
+        return _parking.ContainsVehicle(id, out vehicle);
+    }
+
     public string ReadFromLog()
     {
         return _transactionsLog.Read();
@@ -123,7 +128,7 @@ public class ParkingService : IParkingService
         StringBuilder stringBuilder = new StringBuilder(default(string));
         foreach(TransactionInfo transaction in _transactions)
         {
-            stringBuilder.AppendLine($"[{transaction.TransactionTime}] {transaction.VehicleId} {transaction.Sum}");
+            stringBuilder.AppendLine(transaction.ToString());
         }
         _transactionsLog.Write(stringBuilder.ToString());
         _transactions.Clear();

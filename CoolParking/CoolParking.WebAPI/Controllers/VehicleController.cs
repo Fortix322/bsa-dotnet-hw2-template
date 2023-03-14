@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CoolParking.BL.Interfaces;
 using CoolParking.WebAPI.Models;
+using CoolParking.WebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -23,7 +24,7 @@ namespace CoolParking.WebAPI.Controllers
             var vehicles = _parkingService.GetVehicles();
             if (vehicles.Count == 0) return Ok(vehicles);
 
-            var mapper = new Mapper(VehicleAutoMapperConfiguration.GetVehicleToDTOConfiguration());
+            var mapper = new Mapper(AutoMapperConfiguration.GetVehicleToDTOConfiguration());
 
             var vehiclesDTO = mapper.Map<IList<Vehicle>, List<VehicleDataTransfer>>(vehicles);
 
@@ -48,6 +49,42 @@ namespace CoolParking.WebAPI.Controllers
 
             var requestUrl = $"{Request.Scheme}://{Request.Host.Value}/";
             return Created(requestUrl, vehicle);
+        }
+
+
+        [HttpGet("{id}")]
+        public IActionResult GetVehicleByID([FromRoute]string id)
+        {
+            if (!RegistrationPlate.IsPlateNumberMatchesPattern(id)) return BadRequest();
+
+            Vehicle vehicle;
+            if (!VehicleService.TryGetVehicleByID(_parkingService, id, out vehicle)) return NotFound();
+
+            var mapper = new Mapper(AutoMapperConfiguration.GetVehicleToDTOConfiguration());
+
+            var vehicleDTO = mapper.Map<Vehicle, VehicleDataTransfer>(vehicle);
+
+            return Ok(vehicleDTO);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteVehicle([FromRoute] string id)
+        {
+            if (!RegistrationPlate.IsPlateNumberMatchesPattern(id)) return BadRequest();
+
+            Vehicle vehicle;
+            if (!VehicleService.TryGetVehicleByID(_parkingService, id, out vehicle)) return NotFound();
+
+            try
+            {
+                _parkingService.RemoveVehicle(id);
+            }
+            catch(Exception)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
         }
     }
 }
